@@ -1,0 +1,318 @@
+using System;
+using System.Collections.Generic;
+using System.ComponentModel;
+using System.Data;
+using System.Drawing;
+using System.Text;
+using System.Windows.Forms;
+using System.IO;
+using System.Linq;
+
+namespace New_Assignment
+{
+    public partial class Driver_Form : Form
+    {
+        Policy policy = new Policy();               //Setting up the new objects using lists for policy 
+        Driver driver = new Driver();               //Setting up the new objects using lists for driver  
+
+        List<Driver> drivers;
+
+        List<Policy> policies;
+        List<string> TypeofCar;
+        List<int> Percentage;
+        List<string> Jobs;
+        List<int> PercentageJobs;
+        double kept;                              //Setting variables
+        double usage;
+        double drivnum;
+        double noclaims;                         //Setting variables
+        double b;
+        double p;
+
+
+
+
+        public Driver_Form()                    //This is now created all the lists with in the program
+        {
+            InitializeComponent();
+            policies = new List<Policy>();      //This is now created all the lists with in the program
+            drivers = new List<Driver>();
+            TypeofCar = new List<string>();
+            Percentage = new List<int>();       //This is now created all the lists with in the program
+            Jobs = new List<string>();
+            PercentageJobs = new List<int>();
+        }
+
+        string[] Carinsuramce = System.IO.File.ReadAllLines(@"C:\Users\Ryan\Desktop\Programming Completed\csv\CarInsuranceCategories.csv"); //This is reading in the Car File, where the cars are stored 
+        string[] Jobprofile = System.IO.File.ReadAllLines(@"C:\Users\Ryan\Desktop\Programming Completed\csv\JobList.csv"); //This is reading in the jobs file, where the jobs are stored
+
+
+        private void btnAdd_Click(object sender, EventArgs e)
+        {
+            add();          //This is the add method
+
+
+
+
+            policies.Add(new Policy(DTPStart.Value, txtName.Text, cbNoClaimBonus.SelectedIndex, cbViechle.Text, cbKeptOverNight.Text, cbOccuption.Text, cbUsage.Text, double.Parse(txtEnd.Text)));  //This adds thelist to the policy object using textboxes
+
+            if (cbViechle.SelectedIndex == 0)  //If There hasnt been a car select dont allow the policy move to another page.
+            {
+                policy.Approved = "Investagate";
+
+                MessageBox.Show(policy.Approved);
+            }
+            else
+            {
+                readfile();    //This is calling metods
+                Date();         //This is calling metods
+
+                policy.Approved = "Approved";
+                foreach (var policy in policies)
+                {
+                    MessageBox.Show(policy.ToString());     //Prints the tostring to the program
+                }
+
+
+                FormOutPut frm = new FormOutPut(policies, drivers);     //Creates a new instance of form output and it also is transfering variables over to the forms
+                frm.ShowDialog();
+
+            }
+
+
+
+        }
+
+        private void Date()
+        {
+            policy.Policystart = DTPStart.Value;    //This is how the date is set up
+
+        }
+
+        private void readfile()
+        {
+            for (int i = 0; i < Carinsuramce.Length; i++)
+            {
+                string[] rowData = Carinsuramce[i].Split(',');      //This section of code takes the Car file and splits into to sections
+                int p = int.Parse(rowData[1]);                      //This spilits the second row and stores it in this variable
+
+                TypeofCar.Add(rowData[0]);                          //This row 0 which is the cars and adds it to the type of car list
+
+                cbViechle.Items.Add(rowData[0]);                    //This will fill up the combobox with all the cars
+                Percentage.Add(p);                                  //This adds the second column and adds it to the percentage list
+            }
+
+            int perc = TypeofCar.IndexOf(cbViechle.Text);
+
+
+            for (int i = 0; i < Jobprofile.Length; i++)
+            {
+                string[] colData = Jobprofile[i].Split(',');       //This section of code takes the jobs file and splits into to sections  
+                int l = int.Parse(colData[1]);                     //This spilits the second row and stores it in this variable
+
+                Jobs.Add(colData[0]);                               //This row 0 which is the cars and adds it to the type of car list
+
+                cbOccuption.Items.Add(colData[0]);                  //This will fill up the combobox with all the jobs
+                PercentageJobs.Add(l);                              //This adds the second column and adds it to the percentagejobs list
+            }
+
+            int percjob = Jobs.IndexOf(cbOccuption.Text);           //This sets the varible to a position in the list becuase then you are able to get the other information
+
+            for (int i = 0; i < TypeofCar.Count; i++)
+            {
+                if (TypeofCar.Contains(cbViechle.Text))                         //This code says if the the tpye of car contains the what is in the combobox print out the percentage of the car
+                {
+                    MessageBox.Show("This is the percentage" + Percentage[perc]);
+
+                    b = Percentage[perc];                                       //This is store the number as a variable 
+                    break;
+
+                }
+            }
+
+            for (int i = 0; i < cbOccuption.SelectedIndex; i++)
+            {
+                if (Percentage.Contains(cbOccuption.SelectedIndex))             //This code says if the the tpye of car contains the what is in the combobox print out the percentage of the job  
+                {
+                    MessageBox.Show("This is the percentage" + PercentageJobs[percjob]);
+
+                    p = PercentageJobs[percjob];                               //This will store the percentage of the job as p
+                    break;
+                }
+            }
+
+
+        }
+
+        private void setCars()
+        {
+            if (cbViechle.SelectedIndex == 0)
+            {
+                policy.Approved = "Held";
+            }
+        }
+
+
+        private void Form_Policy_Load(object sender, EventArgs e)
+        {
+                                                               //When the form loads in this will allow the form to fill in the comboxes 
+        }
+
+        private void btnCalcAge_Click(object sender, EventArgs e)
+        {
+            var today = DateTime.Today;                                     //This section of code will calulate the age of the driver
+
+            int age = today.Year - DTPDob.Value.Year;
+
+            if (DTPDob.Value > today.AddYears(-age)) age--;
+
+            txtAge.Text = "" + age;
+
+        }
+
+        private void btnAddDriver_Click(object sender, EventArgs e)
+        {
+            drivers.Add(new Driver(txtFullName.Text, int.Parse(txtAge.Text)));          //This will add drivers to the new driver object
+
+            foreach (var driver in drivers)
+            {
+                MessageBox.Show("Name: " + driver.Name + "\nAge" + driver.DOB);
+            }
+
+            add();                                                                      //This will allow the program to calulate the policy for the car and the driver
+        }
+
+        public void add()
+        {
+
+            if (cbKeptOverNight.SelectedIndex == 0)                                      //All of the if statements in this section of code is setting variables if the postion one is selected
+            {
+                kept = 0.1;
+            }
+            else if (cbKeptOverNight.SelectedIndex == 1)
+            {
+                kept = 0.05;
+            }
+
+
+
+            if (cbNoClaimBonus.SelectedIndex == 1)
+            {
+                noclaims = 0.01;
+            }
+            else if (cbNoClaimBonus.SelectedIndex == 2)                                  //All of the if statements in this section of code is setting variables if the postion one is selected
+            {
+                noclaims = 0.02;
+            }
+            else if (cbNoClaimBonus.SelectedIndex == 3)
+            {
+                noclaims = 0.03;
+            }
+            else if (cbNoClaimBonus.SelectedIndex == 4)
+            {
+                noclaims = 0.04;
+            }
+            else if (cbNoClaimBonus.SelectedIndex == 5)
+            {
+                noclaims = 0.05;
+            }
+            else if (cbNoClaimBonus.SelectedIndex == 6)                             //All of the if statements in this section of code is setting variables if the postion one is selected
+            {
+                noclaims = 0.06;
+            }
+
+            MessageBox.Show("The percentage of the no Claims bonus is: " + noclaims);
+
+            if (cbUsage.SelectedIndex == 1)
+            {
+                usage = 0.05;
+            }
+            else if (cbUsage.SelectedIndex == 2)                                     //All of the if statements in this section of code is setting variables if the postion one is selected
+            {
+                usage = 0.1;
+            }
+
+            if (driver.DOB >= 21 && driver.DOB <= 25)                                 //This says that if the driver date of birth is over 21 and less 25 set the variable to 20%
+            {
+                drivnum = 0.2;
+            }
+            if (driver.DOB > 26 && driver.DOB < 75)                                  //This says that if the driver date of birth is over 26 and less 75 set the variable to 10%
+            {
+                drivnum = 0.1;
+            }
+
+            double start = policy.StartCost;                                        //This sets the Policy start cost to 300
+
+            double per = b / 100;                                                   //This wil get the percenage of b
+
+            double perin = start * per + 300;                                       //This is the start of the cost
+
+            double total = perin * kept;                                            //This is perin  times the kept to get the number 
+
+            double total2 = perin + total;                                          //This is the the number plus perin
+
+            double total3 = total2 * usage;                                         //This is to get the percentage of usage
+
+            double total4 = total2 + total3;                                        //This adds it to the total
+
+            double total5 = total4 * drivnum;                                       //This gets the percenage of drivers age
+
+            double total6 = total5 + total4;                                        //This adds the percentage to the total
+
+            double total7 = total6 * noclaims;                                      //This gets the percentage of noclaims
+
+            double total8 = total6 - total7;                                        //This adds the percentage to the total
+
+
+            policy.Endcost = total8;                                                //This sets the endcost the total
+
+            txtEnd.Text = "" + policy.Endcost;                                      //This prints it out to the textbox so the policy list can pick it up
+
+
+
+        }
+
+        private void btnDisplay_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void DTPStart_ValueChanged(object sender, EventArgs e)
+        {
+
+        }
+
+        private void Driver_Form_Load(object sender, EventArgs e)
+        {
+            readfile();
+        }
+
+        private void btnCalcAge_Click_1(object sender, EventArgs e)
+        {
+            var today = DateTime.Today;                                     //This section of code will calulate the age of the driver
+
+            int age = today.Year - DTPDob.Value.Year;
+
+            if (DTPDob.Value > today.AddYears(-age)) age--;
+
+            txtAge.Text = "" + age;
+        }
+
+        private void btnAddDriver_Click_1(object sender, EventArgs e)
+        {
+            drivers.Add(new Driver(txtFullName.Text, int.Parse(txtAge.Text)));          //This will add drivers to the new driver object
+
+            foreach (var driver in drivers)
+            {
+                MessageBox.Show("Name: " + driver.Name + "\nAge" + driver.DOB);
+            }
+
+            add();
+        }
+
+       
+        
+
+        
+    }
+}
