@@ -1,0 +1,154 @@
+using System;
+using System.Collections.Generic;
+using System.Text;
+
+namespace New_Assignment
+{
+    public class Policy
+    {
+        
+
+        DateTime start = new DateTime();                            //Settting a new instance of datetime called start
+
+        private DateTime policystart;
+        private string name; 
+        private int noclaimbonus;
+        private string car;
+        private string keptovernight;                               //Setting up Variables to use for later
+        private string occuption;
+        private double startcost;
+        private string usage;
+        private int age;
+        private double endcost;
+        private string approved;
+
+        public Policy(string name, int age)                        //Setting up inhertance for driver this will all link into driver class
+        {
+            this.name = name;
+            this.age = age;
+            List<Driver> drivers = new List<Driver>();
+        }
+
+
+      
+
+        public Policy(DateTime policystart, string name, int noclaimbounus, string car, string keptovernight, string occuption, double startcost, string usage, double endcost, string approved) //This wil take all policy properties which can now be used in the program
+        {
+            this.policystart = policystart;
+            this.name = name;
+            this.noclaimbonus = noclaimbounus;
+            this.car = car;
+            this.keptovernight = keptovernight;             //Setting up the properties so they can be used in the main program 
+            this.occuption = occuption;
+            this.startcost = startcost;                 
+            this.usage = usage;
+            this.startcost = 300;
+            this.endcost = 0;
+            this.approved = approved; 
+        }
+
+        public Policy()                                     //This is a blank object so it can be printed out to the screen
+        {
+            this.policystart = start;
+            this.name = " ";
+            this.car = " ";
+            this.keptovernight = " ";
+            this.occuption = " ";
+            this.usage = " ";
+            this.age = 0;
+            this.StartCost = 300;
+            this.endcost = 0;
+            this.approved = "";
+        }
+
+
+      
+
+        public Policy(DateTime policystart, string name, int noclaimbounus, string car, string keptovernight, string occuption, string usage, double endcost) //This is another object which can be used later if needed
+        {
+            this.policystart = policystart;
+            this.name = name;
+            this.noclaimbonus = noclaimbounus;          //Setting up the properties so they can be used in the main program 
+            this.car = car;
+            this.keptovernight = keptovernight;
+            this.occuption = occuption;
+            this.usage = usage;
+            this.endcost = endcost;
+           
+        }
+
+        public DateTime Policystart                 //Setting up the Gets and the sets for all the properties
+        {
+            get { return policystart; }
+            set { policystart = value; }
+        }
+
+        public String Name                          //Setting up the Gets and the sets for all the properties
+        {
+            get { return name; }
+            set { name = value; }
+        }
+
+        public int NoClaimBonus                     //Setting up the Gets and the sets for all the properties
+        {
+            get { return noclaimbonus; }
+            set { noclaimbonus = value; }
+        }
+
+        public String Car                       
+        {
+            get { return car; }
+            set { car = value; }
+        }
+
+        public String KeptOverNight                 //Setting up the Gets and the sets for all the properties
+        {
+            get { return keptovernight; }
+            set { keptovernight = value; }
+        }
+
+        public String Occuption                     //Setting up the Gets and the sets for all the properties
+        {
+            get { return occuption; }
+            set { occuption = value; }
+        }
+
+        public double Endcost                       //Setting up the Gets and the sets for all the properties
+        {
+            get { return endcost; }
+            set { endcost = value; }
+        }
+
+        public double StartCost                     //Setting up the Gets and the sets for all the properties
+        {
+            get { return startcost; }
+            set { startcost = value; }
+        }
+
+        public string Usage
+        {
+            get { return usage; }
+            set { usage = value; }
+        }
+
+        public string Approved
+        {
+            get { return approved; }              //Setting up the Gets and the sets for all the properties
+            set { approved = value; }
+        }
+        public int Age                              //Setting up the Gets and the sets for all the properties
+        {
+            get { return age; }
+            set { age = value; }
+        }
+
+        public override string ToString()           //This is setting up my own personal ToStirng for the Policy class
+        {
+            string str = "PolicyStart: " + policystart + "\nFirstname: " + " " + name + "\nNo ClaimsBonus : " + noclaimbonus + "\nCar: " + car + "\nKept Over Night:  " + keptovernight + "\nOccuption:  " + occuption + "\nUsage:  " + usage + "\nEndcost: " + endcost + "\nPolicy: " + approved ;
+
+            return str;
+
+        }
+
+    }
+}
