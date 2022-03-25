@@ -1,0 +1,46 @@
+using System;
+using System.Collections.Generic;
+using System.Text;
+
+namespace New_Assignment
+{
+    public class Driver
+    {
+   
+
+        private string name;            //Setting up private variables to use later in the program
+        private int dob;
+
+        public Driver(string name, int dob)         //This is setting up the object within the driver class
+        {
+            this.name = name;                   //setting up properties 
+            this.dob = dob;
+        }
+
+        public Driver()                         //this is a blank obect so it can be printed out to the screen if needed
+        {
+            this.name = " ";
+            this.dob = 0;
+        }
+
+        public String Name                      //setting up properties to be used later
+        {
+            get { return name; }
+            set { name = value; }
+        }
+
+        public int DOB
+        {
+            get { return dob; }
+            set { dob = value; }
+        }
+
+        public override string ToString()       //Setting up my personal tostring for driver.
+        {
+            string  str = "  \nDriver Name: " + name + "   \nDriver Date of Birth: " + dob + "\n";
+            return str;
+        }
+
+
+    }
+}
