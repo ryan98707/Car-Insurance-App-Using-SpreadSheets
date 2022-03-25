@@ -1,0 +1,115 @@
+using System;
+using System.Collections.Generic;
+using System.ComponentModel;
+using System.Data;
+using System.Drawing;
+using System.IO;
+using System.Linq;
+using System.Text;
+using System.Windows.Forms;
+
+namespace New_Assignment
+{
+    public partial class FormOutPut : Form
+    {
+
+        List<Policy> policies;          //This is setting up the lists
+        List<Driver> drivers;
+        List<string> name;
+
+        public FormOutPut(List<Policy> policies, List<Driver> drivers)
+        {
+            InitializeComponent();
+            this.policies = policies;       //These are creating the lists
+            this.drivers = drivers;         
+            name = new List<string>();
+
+
+            foreach (var policy in policies)
+            {
+                lblName.Text = "Name: " + policy.Name;                                              //Theses are setting the labels so that the fill out the policy object
+                lblNumofYears.Text = "Number of Claims Bonus: " + policy.NoClaimBonus;
+                lblOccuption.Text = "Occuption: " + policy.Occuption;
+                lblVeichle.Text = "Veichle: " + policy.Car;
+                lblUsage.Text = "Usage: " + policy.Usage;                                           //Theses are setting the labels so that the fill out the policy object
+                lblStartDate.Text = "Sart Date:  " + policy.Policystart;
+                lblKeptOverNight.Text = "Keptovernight: " + policy.KeptOverNight;                   //Theses are setting the labels so that the fill out the policy object
+
+            }
+        }
+        private void read()
+        {
+            foreach (Driver driver in drivers)
+                foreach (Policy policy in policies)
+                {
+                   {
+                        if (driver.DOB < 21)                                            //These if statements are seeing if the driver is under 21
+                        {
+                            MessageBox.Show("Declined lowest driver age " + driver.Name);
+                            policy.Approved = "Declined";
+                            break;
+                        }
+                        else if (driver.DOB > 75)                                       //These if statements are seeing if the driver is older than
+                        {
+                            MessageBox.Show("Decliened Driver is too old " + driver.Name);
+                            policy.Approved = "Declined";
+                            break;
+                            
+                        }
+                        else
+                        {
+                            policy.Approved = "Approved";
+                            MessageBox.Show("Policy beeen accepted! The total cost of the Policy is: £" + policy.Endcost + "\n" + policy.Approved);             //This says if not over 75 and less than 21 the policy has been accetped
+                        }
+                    }
+                }
+        }
+
+
+        private void FormOutPut_Load(object sender, EventArgs e)
+        {
+            txtDriver1.Text = string.Join("\n ", drivers);      //This prints the list to the textbox
+        }
+        private void button1_Click(object sender, EventArgs e)
+        {
+            read();         //The read method gets run when the button is pressed
+        }
+
+        private void saveToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            if (folderBrowserDialog1.ShowDialog() == DialogResult.OK)
+            {
+                string name = folderBrowserDialog1.SelectedPath + "\\" + "CarInsurance" + DateTime.Now.ToString("dd-MM-yy") + ".csv";   //This sets wherer the file is saved. It is saved in the bin folder
+
+                string txt = "";        //This is setting up a blank string 
+
+                foreach (Policy policy in policies)     
+                    foreach (Driver driver in drivers)
+                    {
+                        {
+                            txt += policy.Policystart + "," + policy.Name + "," + policy.NoClaimBonus + "," + policy.Car + "," + policy.KeptOverNight + "," + policy.Occuption + "," + policy.Usage + "," + policy.Approved + "\nPolicy: " + "," +  policy.Endcost + "\nDrivers" + "," + driver.Name + "," + driver.DOB;    //This is how it is wtrien out to the csv file
+                        }
+                    }
+
+
+ 
+                File.WriteAllText(name, txt); //This writes it out to the file
+
+
+
+
+            }
+
+
+
+          
+
+
+
+              
+
+             
+            }
+
+        }
+    }
